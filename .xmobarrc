@@ -1,1 +1,29 @@
-/home/flosca/.xmobarrc
+
+Config { font = "-*-fixed-medium-r-*-*-13-*-*-*-*-*-iso10646-*" --"xft:Droid Sans Mono:size=9:antialias=true"
+        , allDesktops = True
+        , hideOnStart = False
+        , lowerOnStart = True
+        , persistent = True
+        , overrideRedirect = True
+        , borderColor = "black"
+        , border = TopB
+        , bgColor = "black"
+        , fgColor = "grey"
+        , position = BottomW L 100
+        , commands = [  Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                      , Run Date "%a %b %d %Y %H:%M" "date" 10
+                      , Run StdinReader
+                      , Run Com "clj" ["-Sdeps", "{:deps {org.clojure/data.json {:mvn/version \"0.2.6\"}}}", "/home/flosca/.scripts/src/weather.clj"] "weather-clj" 10
+                      , Run BatteryP ["BAT0"]
+                          ["-t", "<acstatus>"
+                          , "-L", "10", "-H", "80"
+                          , "-l", "red", "-h", "green"
+                          , "--", "-O", "Charging", "-o", "<left>%"
+                          ] 10
+                      , Run Memory ["-t","<used>/<total>M","-H","8192","-L","4096","-h","#FFB6B0","-l","#CEFFAC","-n","#FFFFCC"] 10
+                      --, Run PipeReader "/tmp/.volume-pipe" "vol"
+                        ]
+        , sepChar = "%"
+        , alignSep = "}{"
+        , template = "%StdinReader% |  }{<fc=#cafc04>%date%</fc> | %weather-clj% | %memory% | %battery% "
+        }
